@@ -529,10 +529,10 @@
     }
     function adminCancelarSuscripcion(idSuscripcion) { cancelarSuscripcion(Number(idSuscripcion)); return true; }
 
+// -----------------------------------------------------------------
+    // Exponer la API en window.DB (frontend) o module.exports (backend/Node.js)
     // -----------------------------------------------------------------
-    // Exponer la API en window.DB para que la usen los demás módulos.
-    // -----------------------------------------------------------------
-    window.DB = {
+    const DB_API = {
         init: init,
         // rutas
         getRutas: getRutas,
@@ -574,6 +574,12 @@
         getViajesPorUsuario: getViajesPorUsuario
     };
 
-    // Inicializamos la DB en cuanto se carga el script.
-    init();
+    if (typeof window !== 'undefined') {
+        window.DB = DB_API;
+        init();
+    }
+
+    if (typeof module !== 'undefined' && module.exports) {
+        module.exports = DB_API;
+    }
 })();
