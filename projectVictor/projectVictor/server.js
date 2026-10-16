@@ -9,6 +9,20 @@ const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
 
+// 1. IMPORTAR LA CONEXIÓN DE LA BASE DE DATOS PRIMERO
+const db = require("./db"); 
+
+// 2. CÓDIGO PARA CREAR TABLAS AUTOMÁTICAMENTE
+const schemaPath = path.join(__dirname, 'db', 'schema.sql');
+if (fs.existsSync(schemaPath)) {
+  const schemaSql = fs.readFileSync(schemaPath, 'utf8');
+  
+  db.query(schemaSql)
+    .then(() => console.log('✅ Tablas de PostgreSQL creadas/verificadas correctamente en Render'))
+    .catch(err => console.error('❌ Error al ejecutar schema.sql:', err));
+}
+// ------------------------------------------------
+
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 
