@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Resultado del pago — MiRuta</title><link rel="stylesheet" href="style.css"></head>
+<body><main class="auth-wrap"><section class="auth-card glass">
+<h1>MiRuta</h1><p id="resultado">Verificando el resultado del pago...</p>
+<a class="btn-primario" href="index.html" style="text-decoration:none;text-align:center">Volver a MiRuta</a>
+</section></main>
+<script>
+(async function(){
+  const id=new URLSearchParams(location.search).get("id");
+  const el=document.getElementById("resultado");
+  if(!id){el.textContent="No se recibió el identificador de la transacción.";return;}
+  try{
+    const r=await fetch("/api/wompi/transactions/"+encodeURIComponent(id));
+    const d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||"No se pudo verificar.");
+    if(d.status==="APPROVED") el.textContent="Pago aprobado. Puedes volver a MiRuta.";
+    else if(d.status==="PENDING") el.textContent="El pago sigue en proceso. Wompi aún no ha dado un estado final.";
+    else el.textContent="El pago terminó con estado: "+d.status+".";
+  }catch(e){el.textContent=e.message||"No se pudo verificar el pago.";}
+})();
+</script></body></html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MiRuta — Rutas urbanas</title>
+
+    <!-- FUENTES (Sora para titulares, Inter para UI) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- LEAFLET (estilos del mapa) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Wompi Checkout Widget -->
+    <script type="text/javascript" src="https://checkout.wompi.co/widget.js"></script>
+
+    <!-- CSS (después de Leaflet para poder afinar el chrome del mapa) -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Contenedor raíz de la SPA. ui.js renderiza todo aquí dentro. -->
+    <div id="app"></div>
+
+    <!-- LEAFLET (librería del mapa) -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!--
+        ORDEN IMPORTANTE:
+        1) db.js       -> capa de datos (window.DB) y seeds
+        2) auth.js     -> registro/login/sesión (window.Auth)
+        3) payment.js  -> integración Wompi + viajes (window.Payment)
+        4) app.js      -> mapa Leaflet (window.MapaApp), usa DB
+        5) ui.js       -> SPA, usa todo lo anterior (arranca al cargar)
+    -->
+    <script src="db.js"></script>
+    <script src="auth.js"></script>
+    <script src="payment.js"></script>
+    <script src="ai.js"></script>
+    <script src="app.js"></script>
+    <script src="ui.js"></script>
+
+</body>
+
+</html>
