@@ -7,21 +7,27 @@ const express = require("express");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { Pool } = require("pg");
 require("dotenv").config();
 
-// 1. IMPORTAR LA CONEXIÓN DE LA BASE DE DATOS PRIMERO
-const db = require("./db"); 
+// 1. INSTANCIAR CONEXIÓN POSTGRES PARA EL SCHEMA
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.DATABASE_URL ? { rejectUnauthorized: false } : false
+});
 
-// 2. CÓDIGO PARA CREAR TABLAS AUTOMÁTICAMENTE
+// 2. CREAR TABLAS AUTOMÁTICAMENTE USANDO POOL
 const schemaPath = path.join(__dirname, 'db', 'schema.sql');
 if (fs.existsSync(schemaPath)) {
   const schemaSql = fs.readFileSync(schemaPath, 'utf8');
   
-  db.query(schemaSql)
+  pool.query(schemaSql)
     .then(() => console.log('✅ Tablas de PostgreSQL creadas/verificadas correctamente en Render'))
     .catch(err => console.error('❌ Error al ejecutar schema.sql:', err));
 }
-// ------------------------------------------------
+
+// 3. REQUERIR MÓDULO LOCAL
+const db = require("./db");
 
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
